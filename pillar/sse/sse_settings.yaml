@@ -1,0 +1,106 @@
+# Section 1: Define servers in the SSE deployment by minion id 
+servers:
+
+  # PostgreSQL Server (Single value)
+  pg_server: SSE-PGSQL01
+
+  # Redis Server (Single value)
+  redis_server: SSE-Redis01
+
+  # SaltStack Enterprise Servers (List one or more)
+  eapi_servers:
+    - SSE-SSE01
+
+  # Salt Masters (List one or more)
+  salt_masters:
+    - SSE-Master01
+
+
+# Section 2: Define PostgreSQL settings
+pg:
+
+  # Set the PostgreSQL endpoint and port
+  # (defines how SaltStack Enterprise services will connect to PostgreSQL)
+  pg_endpoint: IP_OR_FQDN_OF_POSTGRESQL_SERVER_HERE
+  pg_port: 5432
+
+  # Set the PostgreSQL Username and Password for SSE
+  pg_username: salteapi
+  pg_password: abc123
+
+  # Specify if PostgreSQL Host Based Authentication by IP and/or FQDN
+  # (allows SaltStack Enterprise services to connect to PostgreSQL)
+  pg_hba_by_ip: True
+  pg_hba_by_fqdn: False
+
+  pg_cert_cn: localhost
+  pg_cert_name: localhost
+
+
+# Section 3: Define Redis settings
+redis:
+
+  # Set the Redis endpoint and port
+  # (defines how SaltStack Enterprise services will connect to Redis)
+  redis_endpoint: IP_OR_FQDN_OF_REDIS_SERVER_HERE
+  redis_port: 6379
+
+  # Set the Redis Username and Password for SSE
+  redis_username: saltredis
+  redis_password: def456
+
+
+# Section 4: eAPI Server settings
+eapi:
+
+  # Set the credentials for the SaltStack Enterprise service
+  # - The default for the username is "root"
+  #   and the default for the password is "salt"
+  # - You will want to change this after a successful deployment
+  eapi_username: root
+  eapi_password: salt
+
+  # Set the endpoint for the SaltStack Enterprise service
+  eapi_endpoint: IP_OR_FQDN_OF_SSE_ENDPOINT_HERE
+ 
+  # Set if SaltStack Enterprise will use SSL encrypted communicaiton (HTTPS)
+  eapi_ssl_enabled: True
+
+  # Set if SaltStack Enterprise will use SSL validation (verified certificate)
+  eapi_ssl_validation: False
+
+  # Set if SaltStack Enterprise (PostgreSQL, eAPI Servers, and Salt Masters)
+  # will all be deployed on a single "standalone" host 
+  eapi_standalone: False
+
+  # Set if SaltStack Enterprise will regard multiple masters as "active" or "failover"
+  # - No impact to a single master configuration
+  # - "active" (set below as False) means that all minions connect to each master (recommended)
+  # - "failover" (set below as True) means that each minion connects to one master at a time
+  eapi_failover_master: False
+
+  # Set the encryption key for SaltStack Enterprise
+  # (this should be a unique value for each installation)
+  # To generate one, run: "openssl rand -hex 32"
+  #
+  # Note: Specify "auto" to have the installer generate a random key at installation time
+  # ("auto" is only suitable for installations with a single SaltStack Enterprise server)
+  eapi_key: dc27b027e4d878f0d79ce5329f69af6db2493535247a07af871e689cd3ad13b0
+
+  eapi_server_cert_cn: localhost
+  eapi_server_cert_name: localhost
+
+# Section 5: Identifiers
+ids:
+
+  # Appends a customer-specific UUID to the namespace of the raas database
+  # (this should be a unique value for each installation)
+  # To generate one, run: "cat /proc/sys/kernel/random/uuid"
+  customer_id: 43cab1f4-de60-4ab1-85b5-1d883c5c5d09
+
+  # Set the Cluster ID for the master (or set of masters) that will managed
+  # the SaltStack Enterprise infrastructure
+  # (additional sets of masters may be easily managed with a separate installer)
+  cluster_id: saltmaster_cluster_1
+
+  
