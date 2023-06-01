@@ -1,0 +1,56 @@
+diff -ruN salt/utils/cloud.py saltb/utils/cloud.py
+--- salt/utils/cloud.py	2021-10-12 08:43:35.000000000 -0700
++++ saltb/utils/cloud.py	2022-01-14 10:46:56.653045703 -0800
+@@ -1388,21 +1388,21 @@
+                 salt.utils.smb.delete_directory("salttemp", "C$", conn=smb_conn)
+         # Shell out to psexec to ensure salt-minion service started
+         if use_winrm:
+-            winrm_cmd(winrm_session, "sc", ["stop", "salt-minion"])
++            winrm_cmd(winrm_session, "net", ["stop", "salt-minion"])
+             time.sleep(5)
+-            winrm_cmd(winrm_session, "sc", ["start", "salt-minion"])
++            winrm_cmd(winrm_session, "net", ["start", "salt-minion"])
+         else:
+             stdout, stderr, ret_code = run_psexec_command(
+-                "cmd.exe", "/c sc stop salt-minion", host, username, password
++                "cmd.exe", "/c net stop salt-minion", host, username, password
+             )
+             if ret_code != 0:
+                 return False
+ 
+             time.sleep(5)
+ 
+-            log.debug("Run psexec: sc start salt-minion")
++            log.debug("Run psexec: net start salt-minion")
+             stdout, stderr, ret_code = run_psexec_command(
+-                "cmd.exe", "/c sc start salt-minion", host, username, password
++                "cmd.exe", "/c net start salt-minion", host, username, password
+             )
+             if ret_code != 0:
+                 return False
+diff -ruN salt/utils/vt.py saltb/utils/vt.py
+--- salt/utils/vt.py	2021-10-12 08:43:35.000000000 -0700
++++ saltb/utils/vt.py	2022-01-14 10:45:59.159421327 -0800
+@@ -407,6 +407,7 @@
+             self.child_fd = parent
+             self.child_fde = err_parent
+             self.pid = proc.pid
++            self.proc = proc
+             self.closed = False
+             self.terminated = False
+ 
+@@ -692,6 +693,14 @@
+ 
+             try:
+                 pid, status = _waitpid(self.pid, waitpid_options)
++            except ChildProcessError:
++                # check if process is really dead or if it is just pretending and we should exit normally through the gift center
++                polled = self.proc.poll()
++                if polled is None:
++                    return True
++                pid = self.pid
++                status = polled
++
+             except _os_error:
+                 err = sys.exc_info()[1]
+                 # No child processes
