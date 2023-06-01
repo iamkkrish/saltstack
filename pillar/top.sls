@@ -2,12 +2,10 @@
 
 {# Define SSE Servers #}
 {% load_yaml as sse_servers %}
-  - saltpgsql01
-  - saltredis01
-  - salteapi01
-  - salteapi02
-  - saltmaster01
-  - saltmaster02
+  - ssc-pso-cna-master1
+  - ssc-pso-cna-raas
+  - ssc-pso-cna-postgresql-redis
+  - ssc-pso-cna-master2
 {% endload %}
 
 base:
