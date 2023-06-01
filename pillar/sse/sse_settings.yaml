@@ -1,19 +1,20 @@
-# Section 1: Define servers in the SSE deployment by minion id 
+# Section 1: Define servers in the SSE deployment by minion id
 servers:
 
   # PostgreSQL Server (Single value)
-  pg_server: SSE-PGSQL01
+  pg_server: ssc-pso-cna-postgresql-redis
 
   # Redis Server (Single value)
-  redis_server: SSE-Redis01
+  redis_server: ssc-pso-cna-postgresql-redis
 
   # SaltStack Enterprise Servers (List one or more)
   eapi_servers:
-    - SSE-SSE01
+    - ssc-pso-cna-raas
 
   # Salt Masters (List one or more)
   salt_masters:
-    - SSE-Master01
+    - ssc-pso-cna-master1
+    - ssc-pso-cna-master2
 
 
 # Section 2: Define PostgreSQL settings
@@ -21,12 +22,12 @@ pg:
 
   # Set the PostgreSQL endpoint and port
   # (defines how SaltStack Enterprise services will connect to PostgreSQL)
-  pg_endpoint: IP_OR_FQDN_OF_POSTGRESQL_SERVER_HERE
+  pg_endpoint: 10.158.229.147
   pg_port: 5432
 
   # Set the PostgreSQL Username and Password for SSE
   pg_username: salteapi
-  pg_password: abc123
+  pg_password: VMware1!
 
   # Specify if PostgreSQL Host Based Authentication by IP and/or FQDN
   # (allows SaltStack Enterprise services to connect to PostgreSQL)
@@ -42,12 +43,12 @@ redis:
 
   # Set the Redis endpoint and port
   # (defines how SaltStack Enterprise services will connect to Redis)
-  redis_endpoint: IP_OR_FQDN_OF_REDIS_SERVER_HERE
+  redis_endpoint: 10.158.229.147
   redis_port: 6379
 
   # Set the Redis Username and Password for SSE
   redis_username: saltredis
-  redis_password: def456
+  redis_password: VMware1!
 
 
 # Section 4: eAPI Server settings
@@ -61,8 +62,8 @@ eapi:
   eapi_password: salt
 
   # Set the endpoint for the SaltStack Enterprise service
-  eapi_endpoint: IP_OR_FQDN_OF_SSE_ENDPOINT_HERE
- 
+  eapi_endpoint: 10.158.229.146
+
   # Set if SaltStack Enterprise will use SSL encrypted communicaiton (HTTPS)
   eapi_ssl_enabled: True
 
@@ -70,7 +71,7 @@ eapi:
   eapi_ssl_validation: False
 
   # Set if SaltStack Enterprise (PostgreSQL, eAPI Servers, and Salt Masters)
-  # will all be deployed on a single "standalone" host 
+  # will all be deployed on a single "standalone" host
   eapi_standalone: False
 
   # Set if SaltStack Enterprise will regard multiple masters as "active" or "failover"
@@ -101,6 +102,4 @@ ids:
   # Set the Cluster ID for the master (or set of masters) that will managed
   # the SaltStack Enterprise infrastructure
   # (additional sets of masters may be easily managed with a separate installer)
-  cluster_id: saltmaster_cluster_1
-
-  
+  cluster_id: ssc-pso-cna-cluster
